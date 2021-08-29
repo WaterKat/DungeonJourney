@@ -3,82 +3,8 @@
 
 #include <iostream>
 #include <string>
+
 #include "Game.h"
-
-class WorldInfo;
-class Entity;
-class Weapon;
-
-class Weapon
-{
-public:
-    std::string Name = "Fist";
-    int BaseDamage = 5;
-    int NumberOfAttacks = 1;
-    int ArmorClassBonus = 0;
-
-    static Weapon GetSwordAndShield()
-    {
-        Weapon _newWeapon;
-        _newWeapon.Name = "Sword and Shield";
-        _newWeapon.BaseDamage = 20;
-        _newWeapon.ArmorClassBonus = 2;
-        return _newWeapon;
-    }
-    static Weapon GetDaggers()
-    {
-        Weapon _newWeapon;
-        _newWeapon.Name = "Daggers";
-        _newWeapon.BaseDamage = 15;
-        _newWeapon.NumberOfAttacks = 2;
-        return _newWeapon;
-    }
-    static Weapon GetSpear()
-    {
-        Weapon _newWeapon;
-        _newWeapon.Name = "Spear";
-        _newWeapon.BaseDamage = 34;
-        return _newWeapon;
-    }
-};
-
-class Entity
-{
-public:
-    std::string Name;
-    int Health = 100;
-    int MaxHealth = 100;
-
-    int ArmorClass = 10;
-
-    Weapon EquippedWeapon;
-
-    static Entity GetWolf() 
-    {
-        Entity _newEntity;
-        _newEntity.Name = "Wolf";
-        _newEntity.MaxHealth = 11;
-        _newEntity.Health = 11;
-        _newEntity.ArmorClass = 13;
-        return _newEntity;
-    }
-    static Entity GetBasePlayer()
-    {
-        Entity _newEntity;
-        _newEntity.Name = "Player";
-        _newEntity.MaxHealth = 12;
-        _newEntity.Health = 12;
-        _newEntity.ArmorClass = 14; //ScaleMail
-        return _newEntity;
-    }
-};
-
-class WorldInfo
-{
-public:
-    std::string GoalLocation = "Mordor";
-    std::string GoalItem = "Ring";
-};
 
 int main()
 {
@@ -106,6 +32,7 @@ int main()
     std::cout <<
         _player.Name + " you look at the night sky in awe of the beauty of nature.\n"
         "You hear crickets, frog croaks, and the soothing crackling of your midnight fire.\n"
+        "You think about your dear "+_worldInfo.GoalItem+". If you keep going you'll finally reach it.\n"
         "But this isn't a peaceful world, and you know it's only a matter of time until you have to fight for you life.\n";
     std::cout << "\n";
 
@@ -169,45 +96,28 @@ int main()
     std::cout << "You reach for your "+_player.EquippedWeapon.Name+"!\n";
     std::cout << "\n";
 
+    //Battle Start
+
     std::cout << std::string(27, ' ') + "BATTLE!" + std::string(27, ' ') + "\n";
     std::cout << std::string(61, '~') + "\n";
     std::cout << "\n";
 
     Entity _wolf = Entity::GetWolf();
-        std::cout << "You have been ambushed!\n";
+    
+    std::cout << "You have been ambushed!\n";
     std::cout << "You are faced against a " + _wolf.Name + "!\n";
     std::cout << "\n";
-
-    std::string _attackName = "Bite";
-    std::cout << _wolf.Name + " tries to " + _attackName + "!\n";
-    std::cout << "\n";
-
-    std::system("pause");
-    std::cout << "\n";
-
-    int _attackRoll = rand() % 20 + 1;
-    int _ac = _player.ArmorClass;
-    if (_attackRoll > _ac) 
+    
+    while (true)
     {
-        if (_attackRoll <= _ac + _player.EquippedWeapon.ArmorClassBonus) 
-        {
-            std::cout << "You were able to block the attack with your " + _player.EquippedWeapon.Name + "!\n";
-        }
-        else 
-        {
-            std::cout << "It hits!\n";
-            std::cout << "You take a total of " + std::to_string(_wolf.EquippedWeapon.BaseDamage) + " damage!\n";
-            _player.Health -= _wolf.EquippedWeapon.BaseDamage;
-        }
+        std::cout << std::string(27, '~') + "\n";
+        AttackSequence(_wolf, _player);
+        std::cout << "\n";
+        std::cout << std::string(27, '~') + "\n";
+        AttackSequence(_player, _wolf);
+        std::cout << "\n";
     }
-    else 
-    {
-        std::cout << "The wolf misses its attack!\n";
-    }
-    std::clog << _wolf.Name + " rolled a " + std::to_string(_attackRoll) + "\n";
-    std::cout << "\n";
 
-    std::cout << "You have " + std::to_string(_player.Health) + " health.\n";
     std::cout << "What will you do?\n";
 
     std::cout << "\n\nEND.\n\n";
